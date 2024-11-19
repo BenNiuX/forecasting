@@ -7,7 +7,6 @@ import { useForecastStore } from "./store/forecastStore";
 import Sidebar from './sidebar';
 import Discover from './discover/page';
 import LeaderboardPage from './leaderboard/page';
-import BenchmarkPage from './benchmark/page';
 
 export default function Home() {
   const { isSignedIn, user } = useUser();
