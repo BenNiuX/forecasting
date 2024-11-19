@@ -5,9 +5,6 @@
 name: Build and deploy Python app to Azure Web App - superhuman-bg
 
 on:
-  push:
-    branches:
-      - dev
   workflow_dispatch:
 
 jobs:
