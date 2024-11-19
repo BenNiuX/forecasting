@@ -15,7 +15,7 @@ load_dotenv()
 ENV_TYPE = os.getenv('ENV_TYPE')
 
 class ForecastingMultiAgents:
-    def __init__(self, model: str ="gpt-4o-mini", 
+    def __init__(self, model: str =None,
                  breadth: int =5, 
                  planner_prompt: str =None, 
                  publisher_prompt: str =None, 
@@ -23,10 +23,9 @@ class ForecastingMultiAgents:
                  before_timestamp: int = None,
                  factorize_prompt: str=None):
         serper_api_key = os.getenv("SERPER_API_KEY")
-        
         # query -> plannerAgent -> search queries -> researchAgent based on search queries -> concatenated markdown text -> publisherAgnet
         self.plannerAgent = get_llm_agent_class(model)(model=model, temperature=0.0, max_tokens=512)
-        self.researchAgent = ResearchAgent(serper_api_key=serper_api_key, search_type=search_type, breadth=breadth, before_timestamp=before_timestamp)
+        self.researchAgent = ResearchAgent(serper_api_key=serper_api_key, search_type=search_type, breadth=breadth, before_timestamp=before_timestamp, model=model)
         self.factorizeAgent = get_llm_agent_class(model)(model=model, temperature=0.0, max_tokens=2048)
         self.publisherAgent = get_llm_agent_class(model)(model=model, temperature=0.0, max_tokens=2048)
 
@@ -41,7 +40,7 @@ class ForecastingMultiAgents:
             self.today_string = datetime.now().strftime(GOOGLE_SEARCH_DATE_FORMAT)
 
         if ENV_TYPE == "prod":
-            self.related_forecast_agent = RelatedForecastAgent(model="gpt-4o-mini")
+            self.related_forecast_agent = RelatedForecastAgent(model=model)
         else:
             self.related_forecast_agent = None
 

@@ -24,7 +24,7 @@ SERPER_SEARCH_TYPE_TO_KEY = {
 }
 
 class ResearchAgent:
-    def __init__(self, serper_api_key, search_type: str='search', breadth: int='5', before_timestamp: int = None):
+    def __init__(self, serper_api_key, search_type: str='search', breadth: int='5', before_timestamp: int = None, model: str = None):
         self.serper_api_key = serper_api_key
         self.search_type = search_type if search_type else 'search'
         self.search_serper_args = \
@@ -33,7 +33,7 @@ class ResearchAgent:
                 )
         self.breadth = breadth
         self.before_date_str, self.before_timestamp = handle_timestamp(before_timestamp)
-        self.summarize_agent = get_llm_agent_class("gpt-4o-mini")(model="gpt-4o-mini", temperature=0.0, max_tokens=512)
+        self.summarize_agent = get_llm_agent_class(model)(model=model, temperature=0.0, max_tokens=512)
         self.summarize_prompt = '''I want to make the following article shorter (condense it to no more than 256 words).
 Article: {article}
 When doing this task for me, please do not remove any details that would be helpful for making considerations about the following forecasting question.

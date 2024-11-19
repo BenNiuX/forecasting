@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import os
 import openai
-from anthropic import Anthropic
+from anthropic import Anthropic, AsyncAnthropic
 import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
 from fireworks.client import Fireworks, AsyncFireworks
@@ -69,9 +69,13 @@ class OpenAIAgent(LLMAgent):
     def __init__(self, temperature: float = 0.0, max_tokens: int = 2048, model: str = "gpt-3.5-turbo"):
         super().__init__(temperature, max_tokens)
         self.model = model
+        self.agent_token = os.getenv("METACULUS_TOKEN")
+        base_url = os.getenv("OPENAI_BASE_URL")
         openai_api_key = os.getenv("OPENAI_API_KEY")
-        self.client = openai.OpenAI(api_key=openai_api_key)
-        self.async_client = openai.AsyncOpenAI(api_key=openai_api_key)
+        self.client = openai.OpenAI(api_key=openai_api_key,
+                                    base_url=base_url)
+        self.async_client = openai.AsyncOpenAI(api_key=openai_api_key,
+                                               base_url=base_url)
         self.system = [dict(role='system', content='You are an advanced AI system which has been finetuned to provide calibrated probabilistic forecasts under uncertainty, with your performance evaluated according to the Brier score.')]
 
 
@@ -81,17 +85,19 @@ class OpenAIAgent(LLMAgent):
             model=self.model,
             messages=messages,
             temperature=self.temperature,
-            max_tokens=self.max_tokens
+            max_tokens=self.max_tokens,
+            extra_headers={"Authorization": "Token " + self.agent_token}
         )
         response = response.choices[0].message.content
         return response
-    
+
     async def _async_completions(self, messages: List[Dict]) -> str:
         response = await self.async_client.chat.completions.create(
             model=self.model,
             messages=messages,
             temperature=self.temperature,
-            max_tokens=self.max_tokens
+            max_tokens=self.max_tokens,
+            extra_headers={"Authorization": "Token " + self.agent_token}
         )
         return response.choices[0].message.content
     
@@ -102,10 +108,13 @@ class OpenAIAgent(LLMAgent):
             max_tokens=self.max_tokens,
             temperature=self.temperature,
             messages=messages,
+            extra_headers={"Authorization": "Token " + self.agent_token},
             stream=True
         )
 
         for chunk in stream:
+            if len(chunk.choices) == 0:
+                continue
             if (text := chunk.choices[0].delta.content) is not None:
                 yield text
 
@@ -116,6 +125,15 @@ class FireworksAgent(OpenAIAgent):
         FIREWORKS_API_KEY = os.getenv("FIREWORKS_API_KEY")
         self.client = Fireworks(api_key=FIREWORKS_API_KEY)
         self.async_client = AsyncFireworks(api_key=FIREWORKS_API_KEY)
+
+    async def _completions(self, messages: List[Dict]) -> str:
+        response = self.client.chat.completions.create(
+            model=self.model,
+            messages=messages,
+            temperature=self.temperature,
+            max_tokens=self.max_tokens
+        )
+        return response.choices[0].message.content
 
     async def _async_completions(self, messages: List[Dict]) -> str:
         response = await self.async_client.chat.completions.acreate(
@@ -129,18 +147,50 @@ class FireworksAgent(OpenAIAgent):
 class AnthropicAgent(LLMAgent):
     def __init__(self, temperature: float = 0.0, max_tokens: int = 2048, model: str = "claude-3-haiku"):
         super().__init__(temperature, max_tokens)
-        self.client = Anthropic(api_key=os.env("ANTHROPIC_API_KEY"))
+        base_url = os.getenv("ANTHROPIC_BASE_URL")
+        self.client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"),
+                                base_url=base_url)
+        self.async_client = AsyncAnthropic(api_key=os.getenv("ANTHROPIC_API_KEY"),
+                                           base_url=base_url)
         self.model = model
+        self.agent_token = os.getenv("METACULUS_TOKEN")
 
     def _completions(self, messages: List[Dict]) -> str:
         response = self.client.messages.create(
             model=self.model,
-            max_tokens_to_sample=self.max_tokens,
+            max_tokens=self.max_tokens,
             temperature=self.temperature,
-            messages=messages
+            messages=messages,
+            extra_headers={"Authorization": "Token " + self.agent_token}
         )
         response = response.content[0].text
         return response
+
+    async def _async_completions(self, messages: List) -> str:
+        response = await self.async_client.messages.create(
+            model=self.model,
+            max_tokens=self.max_tokens,
+            temperature=self.temperature,
+            messages=messages,
+            extra_headers={"Authorization": "Token " + self.agent_token}
+        )
+        response = response.content[0].text
+        return response
+
+    async def _completions_stream(self, messages: List):
+        stream = self.client.messages.create(
+            model=self.model,
+            max_tokens=self.max_tokens,
+            temperature=self.temperature,
+            messages=messages,
+            extra_headers={"Authorization": "Token " + self.agent_token},
+            # TODO: How to enable stream ?
+            # stream=True
+        )
+        for chunk in stream:
+            if chunk[0] == "content":
+                if (text := chunk[1][0].text) is not None:
+                    yield text
 
 class GeminiAgent(LLMAgent):
 
@@ -179,7 +229,17 @@ class GeminiAgent(LLMAgent):
         output = completion.text
 
         return output
-    
+
+    async def _async_completions(self, messages: List) -> str:
+        messages = self._preprocess_messages(messages)
+        inputs = messages.pop()
+        chat = self.client.start_chat(history=messages)
+
+        completion = chat.send_message(inputs['parts'], generation_config=self.generation_config, safety_settings=self.safety_settings)
+        output = completion.text
+
+        return output
+
     async def _completions_stream(self, messages: List):
         messages = self._preprocess_messages(messages)
 

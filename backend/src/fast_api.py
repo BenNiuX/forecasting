@@ -119,7 +119,23 @@ async def forecasting_search_local(data: dict) -> str:
     async for chunk in response:
         full_response += chunk
     return full_response
-    
+
+# Version and history information
+__version__ = "0.1.0"
+__history__ = [
+    {
+        "version": "0.1.0",
+        "date": "19/11/2024",
+        "changes": "Setup our own website."
+    },
+    {
+        "version": "0.0.1",
+        "date": "15/11/2024",
+        "changes": "Fork from original repo."
+    }
+]
+
 
 if __name__ == "__main__":
+    print(f"Starting FastAPI server, version: {__version__}")
     uvicorn.run(app, host="0.0.0.0", port=8089)

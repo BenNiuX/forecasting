@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { ClerkProvider } from "@clerk/nextjs";
+import {
+  ClerkProvider,
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  UserButton
+} from "@clerk/nextjs";
 import IpInfoInitializer from "./IpInfoInitializer";
 import { ThemeProvider } from "@/components/theme-provider";
 import Script from "next/script";
@@ -57,6 +63,12 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <div className="flex h-screen">
+              <SignedOut>
+                <SignInButton />
+              </SignedOut>
+              <SignedIn>
+                <UserButton />
+              </SignedIn>
               {children}
             </div>
           </ThemeProvider>

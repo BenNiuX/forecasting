@@ -3,7 +3,7 @@ import json
 import re
 
 class RelatedForecastAgent:
-    def __init__(self, model: str="gpt-4o-mini"):
+    def __init__(self, model: str=None):
         self.generate_related_forecast_agent = get_llm_agent_class(model)(model=model, temperature=0.4, max_tokens=512)
         self.related_forecast_prompt = """You are a creative recommender agent
 

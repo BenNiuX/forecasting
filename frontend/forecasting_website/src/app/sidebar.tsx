@@ -5,6 +5,7 @@ import ThemeToggle from "@/components/theme-toggle";
 import Image from "next/image";
 import CAISLogo from "@/app/assets/cais_logo.svg";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
+import { softwareVersion } from "@/version";
 
 interface SidebarProps {
   activeTab: string;
@@ -20,7 +21,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => (
         width={32}
         height={32}
       />
-      <span className="ml-2 text-lg font-semibold">FiveThirtyNine</span>
+      <span className="ml-2 text-lg font-semibold">FiveThirtyNine v{softwareVersion}</span>
     </div>
 
     <nav className="flex-grow flex flex-row md:flex-col justify-around md:justify-start">
@@ -52,7 +53,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => (
         <SidebarItem
           icon={<GitHubLogoIcon width={24} height={24}/>}
           label="GitHub"
-          onClick={() => window.open("https://github.com/centerforaisafety/forecasting", "_blank")}
+          onClick={() => window.open("https://github.com/BenNiuX/forecasting", "_blank")}
         />
       </ul>
     </nav>

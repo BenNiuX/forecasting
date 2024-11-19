@@ -35,10 +35,18 @@ interface SettingsPanelProps {
 const MODELS = {
   "gpt-4o": "gpt-4o",
   // "gpt-4o-2024-08-06": "gpt-4o-2024-08-06	",
-  "gpt-4o-mini": "gpt-4o-mini",
+  // "gpt-4o-mini": "gpt-4o-mini",
+  "gpt-3.5-turbo-0125": "gpt-3.5-turbo-0125",
+  "claude-3-5-sonnet-20241022": "claude-3-5-sonnet-20241022",
+  "claude-3-sonnet-20240229": "claude-3-sonnet-20240229",
+  // "gemini-1.5-pro": "gemini-1.5-pro", // Less quota
+  "gemini-1.5-flash": "gemini-1.5-flash",
+  "gemini-1.0-pro": "gemini-pro",
   // "accounts/fireworks/models/llama-v3p1-405b-instruct": "Llama 3.1 405B",
   // "accounts/fireworks/models/llama-v3p1-70b-instruct": "Llama 3.1 70B",
   // "accounts/fireworks/models/llama-v3p1-8b-instruct": "Llama 3.1 8B"
+  // Copilot
+  // NIM
 };
 
 const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose }) => {
@@ -91,8 +99,8 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose }) => {
             <Input
               type="number"
               value={settings.breadth}
-              disabled={true}
-              // onChange={(e) => updateSetting('breadth', Number(e.target.value))}
+              // disabled={true}
+              onChange={(e) => updateSetting('breadth', Number(e.target.value))}
               min={1}
               max={100}
             />
@@ -100,7 +108,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose }) => {
           </div>
         </div>
 
-        {/* <div className="space-y-2">
+        <div className="space-y-2">
           <label className="flex items-center text-sm font-medium">
             <CalendarIcon className="mr-2" />
             Before Date
@@ -136,7 +144,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose }) => {
               />
             </PopoverContent>
           </Popover>
-        </div> */}
+        </div>
 
         <div className="space-y-2">
           <div className="flex justify-between items-center">
@@ -155,8 +163,8 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose }) => {
           </div>
           <Textarea
             value={settings.plannerPrompt}
-            disabled={true}
-            // onChange={(e) => updateSetting('plannerPrompt', e.target.value)}
+            // disabled={true}
+            onChange={(e) => updateSetting('plannerPrompt', e.target.value)}
             rows={12}
             className="w-full"
           />
@@ -179,8 +187,8 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose }) => {
           </div>
           <Textarea
             value={settings.publisherPrompt}
-            disabled={true}
-            // onChange={(e) => updateSetting('publisherPrompt', e.target.value)}
+            // disabled={true}
+            onChange={(e) => updateSetting('publisherPrompt', e.target.value)}
             rows={20}
             className="w-full"
           />
