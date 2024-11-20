@@ -74,8 +74,19 @@ export default function Chat() {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const turnstileRef = useRef<TurnstileInstance | null>(null);
 
-  const turnstileSiteKey =
+  console.log(
+    "1NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY:",
+    process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY
+  );
+  console.log(
+    "APPSETTING_NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY:",
+    process.env.APPSETTING_NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY
+  );
+  let turnstileSiteKey =
     process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || "";
+  if (turnstileSiteKey === "") {
+    turnstileSiteKey = "1x00000000000000000000AA";
+  }
   const [isTurnstileReady, setIsTurnstileReady] = useState(false);
 
   const shouldScrollRef = useRef(true);
