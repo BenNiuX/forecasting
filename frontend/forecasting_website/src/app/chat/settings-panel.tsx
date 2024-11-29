@@ -33,20 +33,37 @@ interface SettingsPanelProps {
 }
 
 const MODELS = {
-  "gpt-4o": "gpt-4o",
+  "gpt-4o": "GPT 4o",
   // "gpt-4o-2024-08-06": "gpt-4o-2024-08-06	",
   // "gpt-4o-mini": "gpt-4o-mini",
-  "gpt-3.5-turbo-0125": "gpt-3.5-turbo-0125",
-  "claude-3-5-sonnet-20241022": "claude-3-5-sonnet-20241022",
-  "claude-3-sonnet-20240229": "claude-3-sonnet-20240229",
+  "gpt-3.5-turbo-0125": "GPT 3.5 Turbo",
+  "claude-3-5-sonnet-20241022": "Claude 3.5 Sonnet",
+  "claude-3-sonnet-20240229": "Claude 3 Sonnet",
   // "gemini-1.5-pro": "gemini-1.5-pro", // Less quota
-  "gemini-1.5-flash": "gemini-1.5-flash",
-  "gemini-1.0-pro": "gemini-pro",
+  "gemini-1.5-flash": "Gemini 1.5 Flash",
+  "gemini-1.0-pro": "Gemini Pro",
   // "accounts/fireworks/models/llama-v3p1-405b-instruct": "Llama 3.1 405B",
   // "accounts/fireworks/models/llama-v3p1-70b-instruct": "Llama 3.1 70B",
   // "accounts/fireworks/models/llama-v3p1-8b-instruct": "Llama 3.1 8B"
   // Copilot
   // NIM
+  "meta/llama-3.2-3b-instruct": "Llama 3.2 3B",
+  "meta/llama-3.2-1b-instruct": "Llama 3.2 1B",
+  "meta/llama-3.1-405b-instruct": "Llama 3.1 405B",
+  "meta/llama-3.1-70b-instruct": "Llama 3.1 70B",
+  "meta/llama-3.1-8b-instruct": "Llama 3.1 8B",
+  "google/gemma-2-27b-it": "Gemma 2 27B",
+  "google/gemma-2-9b-it": "Gemma 2 9B",
+  "google/gemma-2-2b-it": "Gemma 2 2B",
+  "google/gemma-7b": "Gemma 7B",
+  "google/gemma-2b": "Gemma 2B",
+  "microsoft/phi-3.5-moe-instruct": "Phi 3.5 MOE",
+  "microsoft/phi-3.5-mini-instruct": "Phi 3.5 Mini",
+  "microsoft/phi-3-medium-128k-instruct": "Phi 3 Medium 128K",
+  "microsoft/phi-3-medium-4k-instruct": "Phi 3 Medium 4K",
+  "microsoft/phi-3-small-128k-instruct": "Phi 3 Small 128K",
+  "microsoft/phi-3-small-8k-instruct": "Phi 3 Small 8K",
+  "mediatek/breeze-7b-instruct": "Breeze 7B",
 };
 
 const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose }) => {

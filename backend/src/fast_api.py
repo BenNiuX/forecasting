@@ -11,6 +11,7 @@ from time import time
 from contextlib import asynccontextmanager
 import os
 import psutil
+from version import __version__
 
 # You should manage your dependencies in your local or virtual environment.
 # Ensure all the required libraries are installed using pip.
@@ -119,22 +120,6 @@ async def forecasting_search_local(data: dict) -> str:
     async for chunk in response:
         full_response += chunk
     return full_response
-
-# Version and history information
-__version__ = "0.1.0"
-__history__ = [
-    {
-        "version": "0.1.0",
-        "date": "19/11/2024",
-        "changes": "Setup our own website."
-    },
-    {
-        "version": "0.0.1",
-        "date": "15/11/2024",
-        "changes": "Fork from original repo."
-    }
-]
-
 
 if __name__ == "__main__":
     print(f"Starting FastAPI server, version: {__version__}")

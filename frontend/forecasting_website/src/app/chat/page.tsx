@@ -50,7 +50,7 @@ export default function Chat() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [model, setModel] = useState<string>(
-    process.env.NEXT_PUBLIC_DEFAULT_MODEL ?? "None"
+    process.env.NEXT_PUBLIC_DEFAULT_MODEL ?? "gpt-4o"
   );
   const [beforeTimestamp, setBeforeTimestamp] = useState<number | undefined>(
     undefined

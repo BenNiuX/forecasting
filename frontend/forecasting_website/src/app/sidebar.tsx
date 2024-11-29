@@ -40,6 +40,12 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => (
           active={activeTab === "discover"}
         />
         {/* <SidebarItem
+          icon={<Compass />}
+          label="Leaderboard"
+          onClick={() => setActiveTab("leaderboard")}
+          active={activeTab === "leaderboard"}
+        />
+        <SidebarItem
           icon={<Trophy />}
           label="Benchmark"
           onClick={() => setActiveTab("benchmark")}

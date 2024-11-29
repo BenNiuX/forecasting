@@ -36,7 +36,7 @@ interface ForecastStore {
 
 
 const defaultSettings: Settings = {
-  model: process.env.NEXT_PUBLIC_DEFAULT_MODEL ?? "None",
+  model: process.env.NEXT_PUBLIC_DEFAULT_MODEL ?? "gpt-4o",
   breadth: Number(process.env.NEXT_PUBLIC_BREADTH) || 7,
   plannerPrompt: defaultPlannerPrompt,
   publisherPrompt: defaultPublisherPrompt,
