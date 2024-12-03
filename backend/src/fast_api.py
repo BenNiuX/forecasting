@@ -174,7 +174,7 @@ def run_tournament():
     metac_base_url = "https://www.metaculus.com/api2"
     tournament_id = 32506
     llm_model_name = "claude-3-5-sonnet-20241022" # "gpt-4o"
-    breadth = 2
+    breadth = int(os.getenv("BREADTH", "7"))
 
     all_questions = []
     offset = 0
