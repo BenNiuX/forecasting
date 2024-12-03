@@ -20,7 +20,8 @@ BLACKLISTED_DOMAINS: List[str] = [
 ]
 SERPER_SEARCH_TYPE_TO_KEY = {
     'search': 'organic',
-    'news': 'news'
+    'news': 'news',
+    'scholar': 'organic'
 }
 
 class ResearchAgent:
@@ -49,7 +50,6 @@ Only return the summarized article. Do not answer the forecasting question yours
         for i in range(0, len(queries), batch_size):
             batch = queries[i:i+batch_size]
             payload = json.dumps([{"q": q} for q in batch])
-
             try:
                 async with aiohttp.ClientSession() as session:
                     async with session.post(**self.search_serper_args, data=payload) as response:
@@ -126,7 +126,6 @@ Only return the summarized article. Do not answer the forecasting question yours
         # Step 1: Query Preparation
         postfix = f" before:{self.before_date_str}" if self.before_date_str else ""
         queries = [q + postfix for q in queries][:self.breadth]
-
         # Step 2: Initial Search
         search_results = await self.search_serper(queries)
         search_results = deduplicate_search_links(search_results)

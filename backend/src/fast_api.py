@@ -12,6 +12,7 @@ from contextlib import asynccontextmanager
 import os
 import psutil
 from version import __version__
+import asyncio
 
 # You should manage your dependencies in your local or virtual environment.
 # Ensure all the required libraries are installed using pip.
@@ -119,8 +120,25 @@ async def forecasting_search_local(data: dict) -> str:
     full_response = ""
     async for chunk in response:
         full_response += chunk
+    print(full_response)
     return full_response
 
+def local_test():
+    data = dict(
+        model="gpt-4o",
+        breadth=3,
+        search_type="news", #"scholar",
+        messages=[
+            {
+                "role": "user",
+                "content": "Will China invade Taiwan before 2030?"
+            }
+        ]
+    )
+    response = asyncio.run(forecasting_search_local(data))
+    print(response)
+
 if __name__ == "__main__":
-    print(f"Starting FastAPI server, version: {__version__}")
-    uvicorn.run(app, host="0.0.0.0", port=8089)
+    # print(f"Starting FastAPI server, version: {__version__}")
+    # uvicorn.run(app, host="0.0.0.0", port=8089)
+    local_test()

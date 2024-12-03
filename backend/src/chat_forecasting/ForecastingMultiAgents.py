@@ -83,6 +83,7 @@ class ForecastingMultiAgents:
         return None
     
     async def completions(self, messages, depth=0):
+        print("input", messages)
         # Step 1 calling plannerAgent to generate search queries
         question = messages[-1]['content']
         if self.breadth < 1:
@@ -111,7 +112,6 @@ class ForecastingMultiAgents:
             # # Handle second yield: Final sources (processed, summarized)
             # research_results = await anext(research_generator)
             # yield json.dumps(research_results) + '[SEP_SOURCE]'
-
         formated_research_results = self.format_research_results(research_results)
 
         # Step 3 publishing results
