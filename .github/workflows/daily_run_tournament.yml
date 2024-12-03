@@ -3,7 +3,7 @@ name: Daily Build Forecast Bot
 on:
   workflow_dispatch:
   schedule:
-    - cron: "18 12 * * *" # every day
+    - cron: "18 23 * * *" # every day
 
 # Daily job to run the simple forecast bot
 jobs:
