@@ -47,4 +47,4 @@ jobs:
           ANTHROPIC_BASE_URL: ${{ secrets.ANTHROPIC_BASE_URL }}
           SERPER_API_KEY: ${{ secrets.SERPER_API_KEY }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          SUBMIT_PREDICTIONS: ${{ variables.SUBMIT_PREDICTIONS }}
+          SUBMIT_PREDICTIONS: ${{ vars.SUBMIT_PREDICTIONS }}
