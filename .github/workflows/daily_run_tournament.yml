@@ -48,3 +48,4 @@ jobs:
           SERPER_API_KEY: ${{ secrets.SERPER_API_KEY }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           SUBMIT_PREDICTIONS: ${{ vars.SUBMIT_PREDICTIONS }}
+          BREADTH: ${{ vars.BREADTH }}
