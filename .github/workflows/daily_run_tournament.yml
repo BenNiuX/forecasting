@@ -3,7 +3,7 @@ name: Daily Build Forecast Bot
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 11 * * *" # every day
+    - cron: "0 12 * * *" # every day
 
 # Daily job to run the simple forecast bot
 jobs:
@@ -12,6 +12,7 @@ jobs:
       run:
         working-directory: ./backend/src/
     runs-on: ubuntu-latest #determines the machine that will run the job - keep as is
+    environment: Tournament # sets the environment to be used in the job
     steps: # sets up the steps that will be run in order
       # setup repository with all necessary dependencies - keep as is
       - name: Check out repository
@@ -46,4 +47,4 @@ jobs:
           ANTHROPIC_BASE_URL: ${{ secrets.ANTHROPIC_BASE_URL }}
           SERPER_API_KEY: ${{ secrets.SERPER_API_KEY }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          SUBMIT_PREDICTIONS: ${{ secrets.SUBMIT_PREDICTIONS }}
+          SUBMIT_PREDICTIONS: ${{ variables.SUBMIT_PREDICTIONS }}
