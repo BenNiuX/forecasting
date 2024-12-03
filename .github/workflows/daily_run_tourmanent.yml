@@ -1,0 +1,47 @@
+name: Daily Build Forecast Bot
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 11 * * *" # every day
+
+# Daily job to run the simple forecast bot
+jobs:
+  daily_build:
+    defaults:
+      run:
+        working-directory: ./backend/src/
+    runs-on: ubuntu-latest #determines the machine that will run the job - keep as is
+    steps: # sets up the steps that will be run in order
+      # setup repository with all necessary dependencies - keep as is
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python version
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Create and start virtual environment
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # run your bot
+      - name: Run bot
+        run: |
+          python fast_api.py
+        # this reads the environment variables from the github repository.
+        # Store under Settings --> Secrets and variables --> Actions
+        env:
+          METACULUS_TOKEN: ${{ secrets.METACULUS_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ANTHROPIC_BASE_URL: ${{ secrets.ANTHROPIC_BASE_URL }}
+          SERPER_API_KEY: ${{ secrets.SERPER_API_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SUBMIT_PREDICTIONS: ${{ secrets.SUBMIT_PREDICTIONS }}
