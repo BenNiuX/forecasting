@@ -16,6 +16,7 @@ import asyncio
 import requests
 import json
 from utils import process_forecasting
+import platform
 
 # You should manage your dependencies in your local or virtual environment.
 # Ensure all the required libraries are installed using pip.
@@ -189,6 +190,8 @@ def run_tournament():
         offset += len(questions)  # update the offset for the next batch of questions
         all_questions.extend(questions)
     print(len(all_questions))
+    print(platform.system())
+    asyncio.get_event_loop().run_forever()
     for question in all_questions:
         question_id = question["id"]
         question_title = question["question"]["title"]
