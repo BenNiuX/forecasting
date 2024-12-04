@@ -191,7 +191,9 @@ def run_tournament():
         all_questions.extend(questions)
     print(len(all_questions))
     print(platform.system())
-    asyncio.get_event_loop().run_forever()
+    # if platform.system() == "Windows":
+    #     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    loop = asyncio.get_event_loop()
     for question in all_questions:
         question_id = question["id"]
         question_title = question["question"]["title"]
@@ -208,7 +210,8 @@ def run_tournament():
                 }
             ]
         )
-        response = asyncio.run(forecasting_search_local(data))
+        # response = asyncio.run(forecasting_search_local(data))
+        response = loop.run_until_complete(forecasting_search_local(data))
 
         res = process_forecasting(response)
         llm_prediction = res["prediction"]
