@@ -104,7 +104,7 @@ async def forecasting_search_local(data: dict) -> str:
     publisherPrompt = data.get('publisherPrompt')
     search_type = data.get('search_type')
     before_timestamp = data.get('beforeTimestamp')
-
+    print("input", data)
     
     multi_agents = ForecastingMultiAgents(model, 
                                           breadth, 
@@ -120,11 +120,12 @@ async def forecasting_search_local(data: dict) -> str:
     full_response = ""
     async for chunk in response:
         full_response += chunk
-    print(full_response)
+    # print(full_response)
     return full_response
 
 def local_test():
     data = dict(
+        # model="claude-3-5-sonnet-20241022", # "gpt-4o"
         model="gpt-4o",
         breadth=3,
         search_type="news", #"scholar",
