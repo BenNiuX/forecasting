@@ -195,10 +195,16 @@ const ReportRenderer: React.FC<ReportRendererProps> = ({
     for (const [region, categories] of Object.entries(jsonContent)) {
       htmlContent += `<h2>${region}</h2>`;
       for (const [category, details] of Object.entries(categories as { [key: string]: any })) {
+        let textContent = "";
+        if (typeof details["text"] === "string") {
+          textContent = details["text"];
+        } else if (typeof details["text"] === "object") {
+          textContent = JSON.stringify(details["text"]);
+        }
         htmlContent += `
           <div class="impact">
             <div class="impact-title">${category}</div>
-            <div class="impact-description">${details["text"]}</div>
+            <div class="impact-description">${textContent}</div>
             <div class="impact-img">
               <img src='data:image/jpeg;base64, ${details["img"]}' />
             </div>
