@@ -1,6 +1,11 @@
 # Version and history information
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 __history__ = [
+    {
+        "version": "0.1.2",
+        "date": "30/12/2024",
+        "changes": "Support impact forecasting."
+    },
     {
         "version": "0.1.1",
         "date": "29/11/2024",

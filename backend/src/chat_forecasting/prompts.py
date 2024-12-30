@@ -28,8 +28,6 @@ or 90% (9:1) and 99% (99:1) as similarly “high” probabilities. As the odds s
 You should output how to break down the question, what are the steps to analyze the question firstly.
 Then follow the steps to analyze the question, collect information from different aspects, summarize information, and make a forecast.
 You should output the probability of the forecast and the reasons for the forecast.
-Besides, you should also output the impacts from different aspects including but not limited to political, social, economic, cultural, environment, technological.
-Last, you should summarize the potential consequences.
 
 Question:
 {question}
@@ -59,10 +57,6 @@ Instructions:
 6. Reflect on your answer, performing sanity checks and mentioning any additional knowledge or background information which may be relevant. Check for over/underconfidence, improper treatment of conjunctive or disjunctive conditions (only if applicable), and other forecasting biases when reviewing your reasoning. Consider priors/base rates, and the extent to which case-specific information justifies the deviation between your tentative forecast and the prior. Recall that your performance will be evaluated according to the Brier score. Be precise with tail probabilities. Leverage your intuitions, but never change your forecast for the sake of modesty or balance alone. Finally, aggregate all of your previous reasoning and highlight key factors that inform your final forecast. Use <thinking></thinking> tags for this portion of your response.
 
 7. Output your final prediction (a number between 0 and 1 with an asterisk at the beginning and end of the decimal) in <answer></answer> tags.
-
-8. Output a list of impacts, you need to describe separately for different aspects, in each aspect based on country or region to describe. Use <impacts></impacts> tags.
-
-9. Output a list of consequences, you need to describe separately for past, short term, medium term, long term. Use <consequences></consequences> tags.
 '''
 
 
@@ -94,4 +88,25 @@ Instructions:
 6. Reflect on your answer, performing sanity checks and mentioning any additional knowledge or background information which may be relevant. Check for over/underconfidence, improper treatment of conjunctive or disjunctive conditions (only if applicable), and other forecasting biases when reviewing your reasoning. Consider priors/base rates, and the extent to which case-specific information justifies the deviation between your tentative forecast and the prior. Recall that your performance will be evaluated according to the Brier score. Be precise with tail probabilities. Leverage your intuitions, but never change your forecast for the sake of modesty or balance alone. Finally, aggregate all of your previous reasoning and highlight key factors that inform your final forecast. Use <thinking></thinking> tags for this portion of your response.
 
 7. Output your final prediction (a number between 0 and 1 with an asterisk at the beginning and end of the decimal) in <answer></answer> tags.
+'''
+
+IMPACT_PROMPT = '''You are an advanced AI system act as a social and political professor which masters analyze social and political questions under uncertainty.
+You should review the below question with more detailed information in the background part, predict the impacts from different aspects including but not limited to political, social, economic, cultural, environment, technological.
+
+Question:
+{question}
+
+Today's date: {today}
+Your pretraining knowledge cutoff: October 2023
+
+We have retrieved the following information for this question:
+<background>{sources}</background>
+
+Recall the question you are forecasting:
+{question}
+
+Instructions:
+1. Output impacts using JSON format, you need to describe separately for different aspects, in each aspect based on country or region to describe. Use <impacts></impacts> tags.
+
+2. Output consequences using JSON format, you need to describe separately for past, short term, medium term, long term. Use <consequences></consequences> tags.
 '''

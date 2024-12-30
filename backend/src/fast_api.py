@@ -13,6 +13,7 @@ import os
 import psutil
 from version import __version__
 import asyncio
+from gen_img import gen_img_bria, gen_img_consi_story
 
 # You should manage your dependencies in your local or virtual environment.
 # Ensure all the required libraries are installed using pip.
@@ -24,6 +25,7 @@ class ForecastingData(BaseModel):
     breadth: int = None
     plannerPrompt: str = None
     publisherPrompt: str = None
+    impactPrompt: str = None
     search_type: str = None
     beforeTimestamp: int = None
 
@@ -33,6 +35,7 @@ class BatchForecastingData(BaseModel):
     breadth: int = None
     plannerPrompt: str = None
     publisherPrompt: str = None
+    impactPrompt: str = None
     search_type: str = None
 
 
@@ -57,6 +60,7 @@ async def forecasting_search_endpoint(data: ForecastingData):
                                           data.breadth, 
                                           data.plannerPrompt,
                                           data.publisherPrompt, 
+                                          data.impactPrompt,
                                           data.search_type, 
                                           data.beforeTimestamp)
     
@@ -74,6 +78,7 @@ async def forecasting_search_batch_endpoint(data: BatchForecastingData, parallel
                                       breadth=data.breadth, 
                                       planner_prompt=data.plannerPrompt,
                                       publisher_prompt=data.publisherPrompt,
+                                      impact_prompt=data.impactPrompt,
                                       search_type=data.search_type)
                for q in data.questions]
 
@@ -102,6 +107,7 @@ async def forecasting_search_local(data: dict) -> str:
     plannerPrompt = data.get('plannerPrompt')
     factorized_prompt = data.get('factorizedPrompt')
     publisherPrompt = data.get('publisherPrompt')
+    impactPrompt = data.get('impactPrompt')
     search_type = data.get('search_type')
     before_timestamp = data.get('beforeTimestamp')
     print("input", data)
@@ -110,6 +116,7 @@ async def forecasting_search_local(data: dict) -> str:
                                           breadth, 
                                           plannerPrompt, 
                                           publisherPrompt, 
+                                          impactPrompt,
                                           search_type, 
                                           before_timestamp,
                                           factorized_prompt)
@@ -139,7 +146,14 @@ def local_test():
     response = asyncio.run(forecasting_search_local(data))
     print(response)
 
+
+def gen_img():
+    gen_img_bria()
+    gen_img_consi_story()
+
 if __name__ == "__main__":
+    # uvicorn --reload --port 8089 fast_api:app
     # print(f"Starting FastAPI server, version: {__version__}")
     # uvicorn.run(app, host="0.0.0.0", port=8089)
     local_test()
+    # gen_img()

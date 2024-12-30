@@ -9,6 +9,7 @@ import { Source } from "../types";
 import {
   Forecast as ForecastModel,
   sources as SourceModel,
+  impacts as ImpactModel,
 } from "@prisma/client";
 
 export async function checkAdminStatus(userEmails: string[]): Promise<boolean> {
@@ -76,6 +77,24 @@ export async function fetchSources(links: string[]): Promise<SourceModel[]> {
   } catch (error) {
     console.error("Error fetching sources:", error);
     throw new Error("Failed to fetch sources");
+  }
+}
+
+export async function fetchImpact(id: string): Promise<ImpactModel | null> {
+  try {
+    const impact = await prisma.impacts.findUnique({
+      where: { id },
+    });
+
+    if (!impact) {
+      console.log(`No impact found with id: ${id}`);
+      return null;
+    }
+
+    return impact;
+  } catch (error) {
+    console.error(`Error fetching impact with id ${id}:`, error);
+    throw new Error("Failed to fetch impact");
   }
 }
 

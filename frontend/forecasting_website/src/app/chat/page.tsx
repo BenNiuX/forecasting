@@ -11,6 +11,7 @@ import SettingsPanel from "./settings-panel";
 import {
   defaultPlannerPrompt,
   defaultPublisherPrompt,
+  defaultImpactPrompt,
 } from "../prompts/prompts";
 import ExampleQueries from "./example-queries";
 import { useForecastStore } from "../store/forecastStore";
@@ -60,6 +61,7 @@ export default function Chat() {
   const [publisherPrompt, setPublisherPrompt] = useState(
     defaultPublisherPrompt
   );
+  const [impactPrompt, setImpactPrompt] = useState(defaultImpactPrompt);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [shouldCreateForecast, setShouldCreateForecast] = useState(false);
   const [queries, setQueries] = useState<string[]>([]);
@@ -74,14 +76,6 @@ export default function Chat() {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const turnstileRef = useRef<TurnstileInstance | null>(null);
 
-  console.log(
-    "1NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY:",
-    process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY
-  );
-  console.log(
-    "APPSETTING_NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY:",
-    process.env.APPSETTING_NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY
-  );
   let turnstileSiteKey =
     process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || "";
   if (turnstileSiteKey === "") {
@@ -102,6 +96,7 @@ export default function Chat() {
     setMessages,
     addMessage,
     updateLastMessage,
+    appendLastMessage,
   } = useForecastStore();
   const searchParams = useSearchParams();
 
@@ -160,6 +155,7 @@ export default function Chat() {
           breadth,
           plannerPrompt,
           publisherPrompt,
+          impactPrompt,
           beforeTimestamp,
         },
       };
@@ -173,6 +169,7 @@ export default function Chat() {
     breadth,
     plannerPrompt,
     publisherPrompt,
+    impactPrompt,
     beforeTimestamp,
     createForecast,
   ]);
@@ -207,6 +204,7 @@ export default function Chat() {
       };
       let fullContent = "";
       let forecastContent = "";
+      let impactContent = "";
       let isForecastingStarted = false;
 
       const { output } = await streamForecastingChat(forecastingChatInput);
@@ -253,7 +251,7 @@ export default function Chat() {
               forecastContent += fullContent;
               fullContent = "";
 
-              updateLastMessage(forecastContent.trim());
+              // updateLastMessage(forecastContent.trim());
             }
           }
 
@@ -267,6 +265,17 @@ export default function Chat() {
             setRelatedForecasts(parsedRelatedForecasts);
 
             fullContent = "";
+          }
+
+          if (fullContent.includes("[IMPACT_START]")) {
+            [, fullContent] = fullContent.split("[IMPACT_START]");
+            impactContent = "";
+          }
+          if (fullContent.includes("[IMPACT_END]")) {
+            const [impact, rest] = fullContent.split("[IMPACT_END]");
+            impactContent += impact;
+            fullContent = rest;
+            appendLastMessage(impactContent.trim());
           }
         }
       }

@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import XLoadingIndicator from "@/components/x-loading";
+import { useForecastStore } from "../store/forecastStore";
 
 interface ReportRendererProps {
   readonly className?: string;
@@ -108,7 +109,7 @@ const ReportRenderer: React.FC<ReportRendererProps> = ({
 }) => {
   const [showAllFacts, setShowAllFacts] = useState(false);
   const [isFactsLoading, setIsFactsLoading] = useState(true);
-
+  const {forecastId, currentImpact, fetchImpact} = useForecastStore();
   useEffect(() => {
     if (content.includes("<facts>")) {
       if (content.includes("</facts>")) {
@@ -187,6 +188,80 @@ const ReportRenderer: React.FC<ReportRendererProps> = ({
 
     return { text: point.trim(), strength: null };
   };
+
+  const generateHtmlContent = (jsonContent: any): string => {
+    let htmlContent = "";
+    // generate images by region
+    for (const [region, categories] of Object.entries(jsonContent)) {
+      htmlContent += `<h2>${region}</h2>`;
+      for (const [category, details] of Object.entries(categories as { [key: string]: any })) {
+        htmlContent += `
+          <div class="impact">
+            <div class="impact-title">${category}</div>
+            <div class="impact-description">${details["text"]}</div>
+            <div class="impact-img">
+              <img src='data:image/jpeg;base64, ${details["img"]}' />
+            </div>
+          </div>
+        `;
+      }
+    }
+    return htmlContent;
+  };
+
+  const generateHtmlPage = (jsonContent: any): string => {
+    let title = "Impacts";
+    const content = generateHtmlContent(jsonContent);
+    let htmlContent = `
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>${title}</title>
+          <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            h1 { color: #333; }
+            .impact { margin-bottom: 20px; }
+            .impact-title { font-weight: bold; }
+            .impact-description { margin-left: 20px; }
+            .impact-img { margin-top: 10px; }
+          </style>
+        </head>
+        <body>
+          <h1>${title}</h1>
+          ${content}
+        </body>
+      </html>
+    `;
+    return htmlContent;
+  };
+
+  const saveHtmlPage = (htmlContent: string) => {
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `report_${forecastId}.html`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const genDetailedImpacts = (content: string, show: boolean) => {
+    // Content is ID of the detailed impacts
+    fetchImpact(content)
+      .then((impact) => {
+        if (currentImpact) {
+          const jsonContent = currentImpact.content;
+          const htmlContent = generateHtmlPage(jsonContent);
+          saveHtmlPage(htmlContent);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching impacts:", error);
+      });
+  };
+
 
   const renderSection = (tag: string, content: string) => {
     if (!content.trim()) {
@@ -268,6 +343,21 @@ const ReportRenderer: React.FC<ReportRendererProps> = ({
                 </Button>
               </div>
             )}
+          </section>
+        );
+      case "impacts":
+        return (
+          <section key={tag} className="mb-4">
+            {
+              <div className="mt-4 text-center">
+                <Button
+                  onClick={() => genDetailedImpacts(content, true)}
+                  variant="outline"
+                >
+                  Check detailed impacts
+                </Button>
+              </div>
+            }
           </section>
         );
       default:

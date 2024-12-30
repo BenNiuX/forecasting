@@ -62,6 +62,17 @@ def process_forecasting(full_result: str):
         print(e)
         return dict(prediction=None, response=response)
 
+def process_impact(full_result: str):
+    response=""
+    try:
+        before, impact = full_result.split('[IMPACT_START]')
+        impact, after = impact.split('[IMPACT_END]')
+        impact_json = impact.split("<impacts>")[-1].split("</impacts>")[0]
+        impact_obj = json.loads(impact_json)
+        return impact_obj
+    except Exception as e:
+        print(e)
+
 @ray.remote
 def process_request(example: Dict, 
                     model: str, 

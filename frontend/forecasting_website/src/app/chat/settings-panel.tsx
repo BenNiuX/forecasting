@@ -24,7 +24,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { defaultPlannerPrompt, defaultPublisherPrompt } from "../prompts/prompts";
+import { defaultImpactPrompt, defaultPlannerPrompt, defaultPublisherPrompt } from "../prompts/prompts";
 import { useForecastStore } from "../store/forecastStore";
 
 interface SettingsPanelProps {
@@ -206,7 +206,31 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose }) => {
             value={settings.publisherPrompt}
             // disabled={true}
             onChange={(e) => updateSetting('publisherPrompt', e.target.value)}
-            rows={20}
+            rows={12}
+            className="w-full"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <div className="flex justify-between items-center">
+            <label className="flex items-center text-sm font-medium">
+              <GearIcon className="mr-2" />
+              Impact Prompt
+            </label>
+            <Button
+              onClick={() => updateSetting('impactPrompt', defaultImpactPrompt)}
+              variant="outline"
+              size="sm"
+            >
+              <ResetIcon className="mr-2" />
+              Reset
+            </Button>
+          </div>
+          <Textarea
+            value={settings.impactPrompt}
+            // disabled={true}
+            onChange={(e) => updateSetting('impactPrompt', e.target.value)}
+            rows={12}
             className="w-full"
           />
         </div>

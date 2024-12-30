@@ -38,6 +38,13 @@ model sources {
   updatedAt DateTime @updatedAt
 }
 
+model impacts {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   Json
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
 model benchmarks {
   id                String   @id @default(auto()) @map("_id") @db.ObjectId
   benchmarkType     String?

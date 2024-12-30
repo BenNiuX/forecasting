@@ -4,13 +4,15 @@ from chat_forecasting.llm_agent import get_llm_agent_class
 from chat_forecasting.research_agent import ResearchAgent
 from chat_forecasting.related_forecast_agent import RelatedForecastAgent
 
-from chat_forecasting.prompts import PLANNER_PROMPT, PUBLISHER_PROMPT
+from chat_forecasting.prompts import PLANNER_PROMPT, PUBLISHER_PROMPT, IMPACT_PROMPT
 from chat_forecasting.parse_date import GOOGLE_SEARCH_DATE_FORMAT
 import asyncio
 import os
 import json
 from datetime import datetime
 from dotenv import load_dotenv
+from gen_img import gen_img_bria
+from utils import process_impact
 load_dotenv()
 ENV_TYPE = os.getenv('ENV_TYPE')
 
@@ -19,6 +21,7 @@ class ForecastingMultiAgents:
                  breadth: int =5, 
                  planner_prompt: str =None, 
                  publisher_prompt: str =None, 
+                 impact_prompt: str =None,
                  search_type: str='news', 
                  before_timestamp: int = None,
                  factorize_prompt: str=None):
@@ -28,9 +31,11 @@ class ForecastingMultiAgents:
         self.researchAgent = ResearchAgent(serper_api_key=serper_api_key, search_type=search_type, breadth=breadth, before_timestamp=before_timestamp, model=model)
         self.factorizeAgent = get_llm_agent_class(model)(model=model, temperature=0.0, max_tokens=2048)
         self.publisherAgent = get_llm_agent_class(model)(model=model, temperature=0.0, max_tokens=2048)
+        self.impactAgent = get_llm_agent_class(model)(model=model, temperature=0.0, max_tokens=2048)
 
         self.planner_prompt = planner_prompt or PLANNER_PROMPT
         self.publisher_prompt = publisher_prompt or PUBLISHER_PROMPT
+        self.impact_prompt = impact_prompt or IMPACT_PROMPT
         self.factorize_prompt = factorize_prompt 
         self.breadth = breadth
 
@@ -123,9 +128,11 @@ class ForecastingMultiAgents:
         print("Total input length:", len(str(publishing_input).split()))
               
         response = await self.publisherAgent.completions_stream(input)
-        
+
+        forecasting_content = ""
         yield "[FORECASTING_START]"
         async for chunk in response:
+            forecasting_content += chunk
             yield chunk
         yield "[FORECASTING_END]"
 
@@ -133,6 +140,31 @@ class ForecastingMultiAgents:
         #     #TODO: clean this to another endpoint later
         #     related_forecasts = self.related_forecast_agent.completion(question=question.split("\n")[0])
         #     yield '[SEP_RESPONSE]' + json.dumps(related_forecasts)
+
+        # Last step: forecast the impact
+        impact_query = self.impact_prompt.format(sources=forecasting_content, today=self.today_string, question=question)
+        impact_input = [dict(role="user", content=impact_query)]
+        input = impact_input
+        print("Total impact input length:", len(str(impact_input).split()))
+        response = await self.impactAgent.completions_stream(input)
+        impact_response = "[IMPACT_START]"
+        async for chunk in response:
+            impact_response += chunk
+        impact_response += "[IMPACT_END]"
+
+        impact_obj = process_impact(impact_response)
+        # Convert regions as 1st level and aspects as 2nd level
+        converted_impact_obj = {}
+        for aspect, areas in impact_obj.items():
+            for area, details in areas.items():
+                if area not in converted_impact_obj:
+                    converted_impact_obj[area] = {}
+                if aspect not in converted_impact_obj[area]:
+                    converted_impact_obj[area][aspect] = {}
+                converted_impact_obj[area][aspect]["text"] = details
+                converted_impact_obj[area][aspect]["img"] = gen_img_bria(f"The impact of {aspect} in {area} is: {details}")
+        ids = await self.researchAgent.caching_agent.add_impact([converted_impact_obj])
+        yield "[IMPACT_START]<impacts>" + str(ids[0]) + "</impacts>[IMPACT_END]"
 
 async def forecasting_search_completions(messages: List, model: str):
     multi_agents = ForecastingMultiAgents(model)

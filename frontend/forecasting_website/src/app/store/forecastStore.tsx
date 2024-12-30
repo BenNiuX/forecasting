@@ -4,12 +4,13 @@ import {
   createForecast as createForecastAction,
   fetchForecast as fetchForecastAction,
   fetchSources as fetchSourcesAction,
+  fetchImpact as fetchImpactAction,
 } from "../server_actions/forecast-actions";
 import { ForecastingChat, Source, UserInfo, Message, Settings } from "../types";
 import { getIpInfo } from "../server_actions/ip-actions";
 import { CreateForecastSchema, SourceItemSchema } from "@/lib/validation/forecast";
-import { Forecast as ForecastModel, sources as SourceModel } from "@prisma/client";
-import { defaultPlannerPrompt, defaultPublisherPrompt } from "../prompts/prompts";
+import { Forecast as ForecastModel, sources as SourceModel, impacts as ImpactModel } from "@prisma/client";
+import { defaultImpactPrompt, defaultPlannerPrompt, defaultPublisherPrompt } from "../prompts/prompts";
 
 interface ForecastStore {
   loading: boolean;
@@ -20,6 +21,7 @@ interface ForecastStore {
   forecastId: string | null;
   currentForecast: ForecastModel | null;
   currentSources: SourceModel[];
+  currentImpact: ImpactModel | null;
   messages: Message[];
   settings: Settings;
   setAuthentication: (status: boolean, userInfo?: UserInfo) => void;
@@ -27,10 +29,12 @@ interface ForecastStore {
   createForecast: (chat: ForecastingChat, sources: Source[]) => Promise<void>;
   fetchForecast: (id: string) => Promise<void>;
   fetchSources: (ids: string[]) => Promise<void>;
+  fetchImpact: (id: string) => Promise<void>;
   initializeIpInfo: () => Promise<void>;
   setMessages: (messages: Message[]) => void;
   addMessage: (message: Message) => void;
   updateLastMessage: (content: string, sources?: Source[]) => void;
+  appendLastMessage: (content: string, sources?: Source[]) => void;
   updateSetting: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
 }
 
@@ -40,6 +44,7 @@ const defaultSettings: Settings = {
   breadth: Number(process.env.NEXT_PUBLIC_BREADTH) || 7,
   plannerPrompt: defaultPlannerPrompt,
   publisherPrompt: defaultPublisherPrompt,
+  impactPrompt: defaultImpactPrompt,
   beforeTimestamp: undefined,
 };
 
@@ -52,6 +57,7 @@ export const useForecastStore = create<ForecastStore>((set, get) => ({
   forecastId: null,
   currentForecast: null,
   currentSources: [],
+  currentImpact: null,
   messages: [],
   settings: defaultSettings,
   setAuthentication: async (status: boolean, userInfo?: UserInfo) => {
@@ -126,6 +132,15 @@ export const useForecastStore = create<ForecastStore>((set, get) => ({
       set({ currentSources: [] });
     }
   },
+  fetchImpact: async (id: string) => {
+    try {
+      const impact = await fetchImpactAction(id);
+      set({ currentImpact: impact });
+    } catch (error) {
+      console.error("Failed to fetch impacts:", error);
+      set({ currentImpact: null });
+    }
+  },
   initializeIpInfo: async () => {
     try {
       const ipResponse = await fetch("https://api.ipify.org?format=json");
@@ -150,6 +165,18 @@ export const useForecastStore = create<ForecastStore>((set, get) => ({
       updatedMessages[updatedMessages.length - 1] = {
         ...lastMessage,
         content,
+        sources: sources || lastMessage.sources,
+      };
+    }
+    return { messages: updatedMessages };
+  }),
+  appendLastMessage: (content: string, sources?: Source[]) => set(state => {
+    const updatedMessages = [...state.messages];
+    if (updatedMessages.length > 0) {
+      const lastMessage = updatedMessages[updatedMessages.length - 1];
+      updatedMessages[updatedMessages.length - 1] = {
+        ...lastMessage,
+        content: lastMessage.content + content,
         sources: sources || lastMessage.sources,
       };
     }

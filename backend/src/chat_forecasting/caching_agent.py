@@ -26,6 +26,7 @@ class CachingAgent:
                 self.db = self.client[db_name]
                 self.blacklisted_domains = self.db['BlacklistedDomain']
                 self.sources = self.db['sources']
+                self.impacts = self.db['impacts']
                 print(f"Connected to MongoDB database caching db successfully")
             except Exception as e:
                 print(f"Error initializing MongoDB connection: {e}")
@@ -109,6 +110,29 @@ class CachingAgent:
             )
         except Exception as e:
             print(f"Error adding query to source: {e}")
+
+    async def add_impact(self, impacts: List[Dict]) -> List[ObjectId]:
+        if impacts and self.impacts is not None:
+            try:
+                documents_to_insert = []
+                current_time = datetime.now(timezone.utc)
+                for imp in impacts:
+                    doc = {}
+                    doc['content'] = imp
+                    doc['createdAt'] = current_time
+                    doc['updatedAt'] = current_time
+                    documents_to_insert.append(doc)
+
+                if documents_to_insert:
+                    result = await self.impacts.insert_many(documents_to_insert, ordered=False)
+                    print(f"Added {len(result.inserted_ids)} impacts documents")
+                    return result.inserted_ids
+                else:
+                    print("No documents to insert")
+                    return []
+            except Exception as e:
+                print(f"Error adding impact documents: {e}")
+                return []
 
     async def close(self):
         if self.client:

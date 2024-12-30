@@ -16,6 +16,7 @@ interface Settings {
   breadth?: number,
   plannerPrompt?: string,
   publisherPrompt?: string,
+  impactPrompt?: string,
   beforeTimestamp?: number
 }
 

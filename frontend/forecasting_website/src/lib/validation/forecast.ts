@@ -34,6 +34,7 @@ const settingsSchema = z.object({
     model: z.string().optional(),
     plannerPrompt: z.string().optional(),
     publisherPrompt: z.string().optional(),
+    impactPrompt: z.string().optional(),
     breadth: z.number().int().optional(),
     beforeTimestamp: z.number().int().optional(),
 });
@@ -48,7 +49,7 @@ export const createForecastSchema = z.object({
     extraInfo: z.object({
       ipInfo: ipInfoSchema.optional(),
     }).default({}),
-  });
+});
 
 export type CreateForecastSchema = z.infer<typeof createForecastSchema>;
 export type SourceItemSchema = z.infer<typeof sourceItemSchema>;
