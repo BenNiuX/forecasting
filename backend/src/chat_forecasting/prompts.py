@@ -91,7 +91,8 @@ Instructions:
 '''
 
 IMPACT_PROMPT = '''You are an advanced AI system act as a social and political professor which masters analyze social and political questions under uncertainty.
-You should review the below question with more detailed information in the background part, predict the impacts from different aspects including but not limited to political, social, economic, cultural, environment, technological.
+You should review the below the question and more information in the background part, predict the impacts from different aspects including but not limited to political, social, economic, cultural, environmental, technological.
+The wider the coverage, the better.
 
 Question:
 {question}
@@ -106,7 +107,12 @@ Recall the question you are forecasting:
 {question}
 
 Instructions:
-1. Output impacts using JSON format, you need to describe separately for different aspects, in each aspect based on country or region to describe. Use <impacts></impacts> tags.
-
-2. Output consequences using JSON format, you need to describe separately for past, short term, medium term, long term. Use <consequences></consequences> tags.
-'''
+1. Output impacts using JSON format, you need to describe separately for different aspects, in each aspect based on each country to describe. You can include as more countries as possible. Use <impacts></impacts> tags.
+2. The JSON format output should be limited to 3 levels, level 1: aspects, level 2: countries, level 3: summary and details.
+3. Level 1 aspects should be one of political, social, economic, cultural, environmental, technological. Capitalize the first letter.
+4. Level 2 countries should be 1 country name or 1 region name or global.
+5. When level 2 is a country name, the country name should be a common name, like use "United States" instead of "USA" or "United States of America" or "US".
+6. When level 2 is a region name, the region name should be a common name, and add "countries" to next level to show detailed country names of this region, like "Southeast Asia" should add: "Countries": ["Brunei", "Cambodia", "East Timor", "Indonesia", "Laos", "Malysia", "Myanmar", "Philippines", "Singapore", "Thailand, "Vietnam"].
+7. When level 2 is global, just use the key "Global". The global should be placed at the end of the level 2.
+8. Level 3 summary and details are used to describe the summary of the impact and the detailed information. The detailed information will be used as prompt for text2image AI model to generate a image to visualize the impact. The key should be "Summary" and "Details". The summary content should be limited to 20 words, the details content should describe a image, needs to be more than 150 words.
+`'''

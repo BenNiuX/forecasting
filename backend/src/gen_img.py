@@ -19,7 +19,7 @@ def gen_img_bria(prompt):
         "mode": "text-to-image",
         "model": "bria-2.3",
         "output_format": "jpeg",
-        "aspect_ratio": "1:1",
+        "aspect_ratio": "16:9",
         "seed": 0,
         "cfg_scale": 5,
         "steps": 30

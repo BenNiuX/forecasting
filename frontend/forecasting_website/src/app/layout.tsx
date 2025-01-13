@@ -15,7 +15,7 @@ import Script from "next/script";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'FiveThirtyNine | Forecasting AI',
+  title: 'ProfessorSP Web | Forecasting AI',
   description: 'Forecasting AI',
   icons: {
     icon: [

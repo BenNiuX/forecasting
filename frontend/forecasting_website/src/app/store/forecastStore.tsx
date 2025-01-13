@@ -40,7 +40,7 @@ interface ForecastStore {
 
 
 const defaultSettings: Settings = {
-  model: process.env.NEXT_PUBLIC_DEFAULT_MODEL ?? "gpt-4o",
+  model: process.env.NEXT_PUBLIC_DEFAULT_MODEL ?? "claude-3-5-sonnet-20241022",
   breadth: Number(process.env.NEXT_PUBLIC_BREADTH) || 7,
   plannerPrompt: defaultPlannerPrompt,
   publisherPrompt: defaultPublisherPrompt,

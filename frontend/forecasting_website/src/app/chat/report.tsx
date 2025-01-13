@@ -195,6 +195,14 @@ const ReportRenderer: React.FC<ReportRendererProps> = ({
     for (const [region, categories] of Object.entries(jsonContent)) {
       htmlContent += `<h2>${region}</h2>`;
       for (const [category, details] of Object.entries(categories as { [key: string]: any })) {
+        if (category === "Countries")
+        {
+          htmlContent += `
+            <div class="impact-title">${category}</div>
+            <div class="impact-summary">${details}</div>
+          `;
+          continue;
+        }
         let textContent = "";
         if (typeof details["text"] === "string") {
           textContent = details["text"];
@@ -204,7 +212,8 @@ const ReportRenderer: React.FC<ReportRendererProps> = ({
         htmlContent += `
           <div class="impact">
             <div class="impact-title">${category}</div>
-            <div class="impact-description">${textContent}</div>
+            <div class="impact-summary">${textContent}</div>
+            <div class="impact-description">${details["details"]}</div>
             <div class="impact-img">
               <img src='data:image/jpeg;base64, ${details["img"]}' />
             </div>
@@ -230,7 +239,8 @@ const ReportRenderer: React.FC<ReportRendererProps> = ({
             h1 { color: #333; }
             .impact { margin-bottom: 20px; }
             .impact-title { font-weight: bold; }
-            .impact-description { margin-left: 20px; }
+            .impact-summary { margin-left: 20px; }
+            .impact-description { margin-left: 30px; }
             .impact-img { margin-top: 10px; }
           </style>
         </head>
@@ -248,7 +258,7 @@ const ReportRenderer: React.FC<ReportRendererProps> = ({
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `report_${forecastId}.html`;
+    a.download = `ProfessorSP_impacts_${forecastId}.html`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -366,6 +376,8 @@ const ReportRenderer: React.FC<ReportRendererProps> = ({
             }
           </section>
         );
+      case "steps":
+        return null;
       default:
         return (
           <section key={tag} className="mb-4">

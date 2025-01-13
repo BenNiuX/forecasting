@@ -159,10 +159,13 @@ class ForecastingMultiAgents:
             for area, details in areas.items():
                 if area not in converted_impact_obj:
                     converted_impact_obj[area] = {}
+                    if "Countries" in details:
+                        converted_impact_obj[area]["Countries"] = details["Countries"]
                 if aspect not in converted_impact_obj[area]:
                     converted_impact_obj[area][aspect] = {}
-                converted_impact_obj[area][aspect]["text"] = details
-                converted_impact_obj[area][aspect]["img"] = gen_img_bria(f"The impact of {aspect} in {area} is: {details}")
+                converted_impact_obj[area][aspect]["text"] = details["Summary"]
+                converted_impact_obj[area][aspect]["details"] = details["Details"]
+                converted_impact_obj[area][aspect]["img"] = gen_img_bria(f"Generate a image to visualize the impact of {aspect} in {area}: {details["Details"]}")
         ids = await self.researchAgent.caching_agent.add_impact([converted_impact_obj])
         yield "[IMPACT_START]<impacts>" + str(ids[0]) + "</impacts>[IMPACT_END]"
 

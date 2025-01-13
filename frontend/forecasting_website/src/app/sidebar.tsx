@@ -21,7 +21,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => (
         width={32}
         height={32}
       />
-      <span className="ml-2 text-lg font-semibold">FiveThirtyNine v{softwareVersion}</span>
+      <span className="ml-2 text-lg font-semibold">ProfessorSP Web v{softwareVersion}</span>
     </div>
 
     <nav className="flex-grow flex flex-row md:flex-col justify-around md:justify-start">
