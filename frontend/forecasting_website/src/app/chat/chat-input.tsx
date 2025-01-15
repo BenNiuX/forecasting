@@ -42,6 +42,11 @@ const ChatInput: React.FC<ChatInputProps> = ({
 
   return (
     <form className="flex flex-col" onSubmit={handleSubmit}>
+      <div className="text-sm mt-2">
+      <p>Ask a specific, time-bound, geographical, sociopolitical question about a future event.</p>
+      <p>Follow the format: What is the probability and impact of [specific event/outcome] in [context] with [conditions/variables]?
+      </p>
+      </div>
       <div className="relative bg-background">
         <div className="flex items-center">
           <div className="relative flex-grow">
@@ -51,7 +56,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
               disabled={isLoading}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="⇥ What's the probability that..."
+              // placeholder="⇥ What's the probability that..."
               value={input}
               rows={2}
             />

@@ -414,11 +414,11 @@ export default function Chat() {
       <div className="relative mb-6">
         <div className="max-w-[calc(100%-2rem)] sm:max-w-3xl w-full mx-auto">
           <div className="bg-transparent rounded-2xl">
-            {messages.length === 0 &&
+            {/* {messages.length === 0 &&
               isFetchingForecast !== undefined &&
               isTurnstileReady && (
                 <ExampleQueries onExampleClick={handleExampleClick} />
-              )}
+              )} */}
             <Turnstile
               ref={turnstileRef}
               options={{
