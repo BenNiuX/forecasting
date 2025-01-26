@@ -36,7 +36,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
       handleSubmit(e);
     } else if (e.key === "Tab" && input === "") {
       e.preventDefault();
-      setInput("What's the probability that ");
+      setInput("What is the impact of ");
     }
   };
 
@@ -44,7 +44,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
     <form className="flex flex-col" onSubmit={handleSubmit}>
       <div className="text-sm mt-2">
       <p>Ask a specific, time-bound, geographical, sociopolitical question about a future event.</p>
-      <p>Follow the format: What is the probability and impact of [specific event/outcome] in [context] with [conditions/variables]?
+      <p>Follow the format: What is the impact of [specific event/outcome] in [context] with [conditions/variables]?
       </p>
       </div>
       <div className="relative bg-background">
@@ -95,7 +95,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
         </div>
       </div>
       <p className="text-xs text-muted-foreground mt-2 text-center">
-      Research demo of superhuman forecasting AI. Probabilities are approximate.
+      Research demo of superhuman forecasting AI. Probabilities and Impacts are approximate.
       </p>
     </form>
   );

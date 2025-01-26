@@ -7,10 +7,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
+import { useEffect } from 'react';
 
 export default function ThemeToggle() {
     const { setTheme } = useTheme();
-  
+    useEffect(() => {
+      setTheme('dark');
+    }, []);
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

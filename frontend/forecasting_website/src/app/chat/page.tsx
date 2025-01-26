@@ -371,7 +371,7 @@ export default function Chat() {
                       <div>
                         <p className="mb-2 flex items-center text-xs sm:text-sm font-semibold">
                           <BookmarkIcon className="mr-2 size-3 sm:size-4" />{" "}
-                          Sources
+                          Media Sources
                         </p>
                         <SourceCard sources={message.sources} />
                       </div>
