@@ -148,12 +148,17 @@ def local_test():
 
 
 def gen_img():
-    gen_img_bria()
-    gen_img_consi_story()
+    gen_img_bria('''
+This image depicts a person wearing VR (virtual reality) goggles, immersed in a digital world filled with visualized data and text. The VR goggles cover the user's eyes, with a faint blue light emanating from the lenses, hinting at the activation of the virtual environment. The user's head is slightly tilted upward, as if observing information floating in the air.
+
+In the virtual reality, the user's field of view is surrounded by intricate 3D graphics, dynamic charts, floating text, and data streams. This information is presented in a three-dimensional manner, seemingly within reach. For instance, the user might see a set of rotating bar charts, a flowing timeline, or flickering real-time data streams. Textual information may float in the air in a semi-transparent form, with colors and sizes varying based on importance.
+
+The background could be an abstract virtual space, filled with futuristic geometric patterns and soft lighting, creating a highly technological atmosphere. The overall image conveys a sense of deep integration between humans and technology, as if the user is directly interacting with the world of data through the VR goggles.
+                 ''')
 
 if __name__ == "__main__":
     # uvicorn --reload --port 8089 fast_api:app
     # print(f"Starting FastAPI server, version: {__version__}")
     # uvicorn.run(app, host="0.0.0.0", port=8089)
-    local_test()
-    # gen_img()
+    # local_test()
+    gen_img()

@@ -88,7 +88,7 @@ class ForecastingMultiAgents:
         return None
     
     async def completions(self, messages, depth=0):
-        print("input", messages)
+        # print("input", messages)
         # Step 1 calling plannerAgent to generate search queries
         question = messages[-1]['content']
         if self.breadth < 1:
@@ -151,7 +151,7 @@ class ForecastingMultiAgents:
         async for chunk in response:
             impact_response += chunk
         impact_response += "[IMPACT_END]"
-
+        # print("impact_response:", impact_response)
         impact_obj = process_impact(impact_response)
         # Convert regions as 1st level and aspects as 2nd level
         converted_impact_obj = {}

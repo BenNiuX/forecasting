@@ -43,8 +43,9 @@ const ChatInput: React.FC<ChatInputProps> = ({
   return (
     <form className="flex flex-col" onSubmit={handleSubmit}>
       <div className="text-sm mt-2">
-      <p>Ask a specific, time-bound, geographical, sociopolitical question about a future event.</p>
-      <p>Follow the format: What is the impact of [specific event/outcome] in [context] with [conditions/variables]?
+      <p>Ask a question following the format: </p>
+      <p>What would happen if [specific socio-political action/policy] in [geographical context]?</p>
+      <p>Optional: given [identified conditions], on [identified groups of people], over [time period]
       </p>
       </div>
       <div className="relative bg-background">
@@ -95,7 +96,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
         </div>
       </div>
       <p className="text-xs text-muted-foreground mt-2 text-center">
-      Research demo of superhuman forecasting AI. Probabilities and Impacts are approximate.
+      Research demo of superhuman forecasting AI. Answers are approximate.
       </p>
     </form>
   );

@@ -113,6 +113,7 @@ Instructions:
 4. Level 2 countries should be 1 country name or 1 region name or global.
 5. When level 2 is a country name, the country name should be a common name, like use "United States" instead of "USA" or "United States of America" or "US".
 6. When level 2 is a region name, the region name should be a common name, and add "countries" to next level to show detailed country names of this region, like "Southeast Asia" should add: "Countries": ["Brunei", "Cambodia", "East Timor", "Indonesia", "Laos", "Malysia", "Myanmar", "Philippines", "Singapore", "Thailand, "Vietnam"].
-7. When level 2 is global, just use the key "Global". The global should be placed at the end of the level 2.
+7. When level 2 is global, just use the key "Global". The global should be placed after all countries and regions, at the end of level 2.
 8. Level 3 summary and details are used to describe the summary of the impact and the detailed information. The detailed information will be used as prompt for text2image AI model to generate a image to visualize the impact. The key should be "Summary" and "Details". The summary content should be limited to 20 words, the details content should describe a image, needs to be more than 150 words.
-`'''
+9. If the outout information is too long to break the response, please only keep some aspects and countries to make sure the response is not too long.
+'''
