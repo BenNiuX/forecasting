@@ -127,13 +127,12 @@ class ForecastingMultiAgents:
         
         print("Total input length:", len(str(publishing_input).split()))
               
-        response = await self.publisherAgent.completions_stream(input)
-
-        forecasting_content = ""
+        response = self.publisherAgent.completions(input)
+        forecasting_content = response
         yield "[FORECASTING_START]"
-        async for chunk in response:
-            forecasting_content += chunk
-            yield chunk
+        yield response
+        # async for chunk in response:
+        #     yield chunk
         yield "[FORECASTING_END]"
 
         # if self.related_forecast_agent:
@@ -146,10 +145,9 @@ class ForecastingMultiAgents:
         impact_input = [dict(role="user", content=impact_query)]
         input = impact_input
         print("Total impact input length:", len(str(impact_input).split()))
-        response = await self.impactAgent.completions_stream(input)
+        response = self.impactAgent.completions(input)
         impact_response = "[IMPACT_START]"
-        async for chunk in response:
-            impact_response += chunk
+        impact_response += response
         impact_response += "[IMPACT_END]"
         # print("impact_response:", impact_response)
         impact_obj = process_impact(impact_response)
