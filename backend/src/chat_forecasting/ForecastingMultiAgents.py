@@ -122,11 +122,12 @@ class ForecastingMultiAgents:
         
         print("Total input length:", len(str(publishing_input).split()))
               
-        response = await self.publisherAgent.completions_stream(input)
+        response = self.publisherAgent.completions(input)
         
         yield "[FORECASTING_START]"
-        async for chunk in response:
-            yield chunk
+        yield response
+        # async for chunk in response:
+        #     yield chunk
         yield "[FORECASTING_END]"
 
         # if self.related_forecast_agent:
