@@ -12,3 +12,4 @@ ray
 uvicorn
 fastapi
 motor
+numpy
