@@ -51,6 +51,11 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
+
 # Define the endpoint
 @app.post("/forecasting_search/")
 async def forecasting_search_endpoint(data: ForecastingData):
