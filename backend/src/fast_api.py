@@ -163,7 +163,7 @@ The background could be an abstract virtual space, filled with futuristic geomet
 
 if __name__ == "__main__":
     # uvicorn --reload --port 8089 fast_api:app
-    # print(f"Starting FastAPI server, version: {__version__}")
-    # uvicorn.run(app, host="0.0.0.0", port=8089)
+    print(f"Starting FastAPI server, version: {__version__}")
+    uvicorn.run(app, host="0.0.0.0")
     # local_test()
-    gen_img()
+    # gen_img()
