@@ -25,7 +25,7 @@ import { streamForecastingChat } from "../server_actions/llm-actions";
 import { Turnstile } from "@marsidev/react-turnstile";
 import type { TurnstileInstance } from "@marsidev/react-turnstile";
 
-export const maxDuration = 300;
+export const maxDuration = 60; // Vercel hobby plan max to 60, change from 300;
 
 const maxTurn = 1;
 
