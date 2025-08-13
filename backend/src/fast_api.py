@@ -13,7 +13,7 @@ import os
 import psutil
 from version import __version__
 import asyncio
-from gen_img import gen_img_bria, gen_img_consi_story
+from gen_img import gen_img_bria, gen_img_consi_story, gen_img_diff3
 
 # You should manage your dependencies in your local or virtual environment.
 # Ensure all the required libraries are installed using pip.
@@ -153,7 +153,7 @@ def local_test():
 
 
 def gen_img():
-    gen_img_bria('''
+    gen_img_diff3('''
 This image depicts a person wearing VR (virtual reality) goggles, immersed in a digital world filled with visualized data and text. The VR goggles cover the user's eyes, with a faint blue light emanating from the lenses, hinting at the activation of the virtual environment. The user's head is slightly tilted upward, as if observing information floating in the air.
 
 In the virtual reality, the user's field of view is surrounded by intricate 3D graphics, dynamic charts, floating text, and data streams. This information is presented in a three-dimensional manner, seemingly within reach. For instance, the user might see a set of rotating bar charts, a flowing timeline, or flickering real-time data streams. Textual information may float in the air in a semi-transparent form, with colors and sizes varying based on importance.

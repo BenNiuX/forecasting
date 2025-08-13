@@ -1,6 +1,11 @@
 # Version and history information
-__version__ = "0.1.4"
+__version__ = "0.1.5"
 __history__ = [
+    {
+        "version": "0.1.5",
+        "date": "13/08/2025",
+        "changes": "Use stable-diffusion-3-medium to generate images."
+    },
     {
         "version": "0.1.4",
         "date": "29/01/2025",

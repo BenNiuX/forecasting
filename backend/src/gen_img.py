@@ -2,6 +2,38 @@ import os
 import requests
 import base64
 
+
+def gen_img_diff3(prompt):
+    # https://build.nvidia.com/stabilityai/stable-diffusion-3-medium
+    # https://docs.api.nvidia.com/nim/reference/stabilityai-stable-diffusion-3-medium
+    invoke_url = os.getenv("IMG_GEN_URL_DIFF3")
+    prompt = "Create an image to visualise the following information: " + prompt
+    headers = {
+        "Authorization": "Bearer " + os.getenv("NIM_API_KEY"),
+        "Accept": "application/json",
+    }
+
+    payload = {
+        "prompt": prompt,
+        "cfg_scale": 5,
+        "aspect_ratio": "16:9",
+        "seed": 0,
+        "steps": 30,
+        "negative_prompt": ""
+    }
+
+    response = requests.post(invoke_url, headers=headers, json=payload)
+
+    response.raise_for_status()
+    data = response.json()
+    seed = data['seed']
+    print("Seed", data['seed'], "Finish Reason", data['finish_reason']) 
+    img_base64 = data['image']
+    # imageBytes = base64.b64decode(data['image'])
+    # with open(f'diff3_{seed}.jpg', 'wb') as f:
+    #     f.write(imageBytes)
+    return img_base64
+
 def gen_img_bria(prompt):
     # https://build.nvidia.com/briaai/bria-2_3
     # https://docs.api.nvidia.com/nim/reference/briaai-bria-2_3-infer

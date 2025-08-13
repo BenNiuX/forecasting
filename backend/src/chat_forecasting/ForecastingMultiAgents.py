@@ -11,7 +11,7 @@ import os
 import json
 from datetime import datetime
 from dotenv import load_dotenv
-from gen_img import gen_img_bria
+from gen_img import gen_img_diff3
 from utils import process_impact
 load_dotenv()
 ENV_TYPE = os.getenv('ENV_TYPE')
@@ -163,7 +163,7 @@ class ForecastingMultiAgents:
                     converted_impact_obj[area][aspect] = {}
                 converted_impact_obj[area][aspect]["text"] = details["Summary"]
                 converted_impact_obj[area][aspect]["details"] = details["Details"]
-                converted_impact_obj[area][aspect]["img"] = gen_img_bria(f"Generate a image to visualize the impact of {aspect} in {area}: {details["Details"]}")
+                converted_impact_obj[area][aspect]["img"] = gen_img_diff3(f"Generate a image to visualize the impact of {aspect} in {area}: {details["Details"]}")
         ids = await self.researchAgent.caching_agent.add_impact([converted_impact_obj])
         yield "[IMPACT_START]<impacts>" + str(ids[0]) + "</impacts>[IMPACT_END]"
 
