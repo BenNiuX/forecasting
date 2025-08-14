@@ -1,29 +1,25 @@
-# Use Ubuntu 24.04 as the base image
-FROM ubuntu:24.04
-
-# Update Ubuntu Software repository
-RUN apt update 
-
-# Upgrade packages 
-RUN apt upgrade -y
-
-# Install npm
-RUN apt install -y npm
-
-# Set the working directory in the container
+# Build stage
+FROM node:18-alpine AS builder
+RUN apk update \
+	&& apk add --no-cache openssl\
+	&& rm -rf /var/lib/apt/lists/* \
+	&& rm -rf /var/cache/apk/*
 WORKDIR /app
-
-# Copy package.json and package-lock.json (if available)
 COPY package*.json ./
-
-# Install dependencies
-RUN npm install --frozen-lockfile
-
-# Copy the rest of your app's source code
+RUN npm ci
 COPY . .
+RUN npm run build
 
-# Expose the port the app runs on
-EXPOSE 3000
-
-# Command to run the app using serve
-CMD ["npm", "run", "dev"]
+# Production stage
+FROM node:18-alpine
+RUN apk update \
+	&& apk add --no-cache openssl\
+	&& rm -rf /var/lib/apt/lists/* \
+	&& rm -rf /var/cache/apk/*
+WORKDIR /app
+COPY package*.json ./
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+EXPOSE 3000 3001 3002
+CMD ["npm", "run", "start"]

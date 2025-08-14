@@ -1,39 +1,23 @@
-# Use Ubuntu 24.04 as the base image
-FROM ubuntu:24.04
+FROM python:3.12-slim
 
-# Set a non-root user for better security
-ARG USERNAME=dockeruser
-RUN useradd -ms /bin/bash $USERNAME
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    && rm -rf /var/lib/apt/lists/*
 
-# Update and install dependencies in a single RUN command to reduce image layers
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y \
-        python3 \
-        python3-pip \
-        python3-venv \
-        git && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Set the working directory in the container
 WORKDIR /app
 
-# Copy the application source code
+# Copy requirements first for better caching
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy source code
 COPY . .
 
-# Create and activate the virtual environment, then install requirements
-RUN python3 -m venv /venv && \
-    /venv/bin/pip install --no-cache-dir -r requirements.txt
+# Use non-root user
+RUN useradd -m appuser && chown -R appuser:appuser /app
+USER appuser
 
-# Change ownership of the application files to the non-root user
-RUN chown -R $USERNAME:$USERNAME /app
-
-# Switch to the non-root user
-USER $USERNAME
-
-# Expose the port the app runs on
 EXPOSE 8089
 
-# Command to run the app
-CMD ["/venv/bin/python3", "fast_api.py"]
+CMD ["uvicorn", "fast_api:app", "--host", "0.0.0.0", "--port", "8089"]

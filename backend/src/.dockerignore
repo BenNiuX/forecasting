@@ -1,0 +1,50 @@
+# VCS
+.git
+.github
+.gitignore
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+pip-wheel-metadata/
+dist/
+build/
+.mypy_cache/
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Virtual envs
+.venv/
+venv/
+env/
+
+# Logs, data, notebooks
+*.log
+logs/
+data/
+datasets/
+*.ipynb
+
+# Env/secrets
+.env
+.env.*
+!.env.template
+*.pem
+*.key
+
+# Editors/OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Misc
+docker-compose*.yml
+*.bak
+*.tmp
